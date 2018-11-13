@@ -38,7 +38,7 @@ module Webhookr
         callback = Webhookr.config[service_name].try(:callback)
         raise Webhookr::MissingCallbackClassError, service_name if callback.nil?
 
-        @call_back_class || callback.new
+        @call_back_class ||= callback.new
       end
 
       def configured_security_token
