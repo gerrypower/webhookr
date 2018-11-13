@@ -33,6 +33,7 @@ module Webhookr
         @service = Webhookr::Service.new(
           params[:service_id],
           payload: request.body.read,
+          params: params,
           security_token: params[:security_token]
         )
       rescue Webhookr::InvalidServiceNameError

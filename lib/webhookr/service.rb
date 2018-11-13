@@ -7,17 +7,23 @@ module Webhookr
     def initialize(service_name, options = {})
       @service_name = (service_name || '').downcase
       @raw_payload = options[:payload]
+      @params = options[:params]
       available?
       validate_security_token(options[:security_token]) if configured_security_token
     end
 
     def process!
+      set_callback_params(callback_class, @params)
       Array.wrap(service_adapter.send(:process, @raw_payload)).each do |payload|
         callback(callback_class, payload)
       end
     end
 
     private
+
+      def set_callback_params(object, params)
+        object.send(:params=, params) if object.respond_to?(:params=)
+      end
 
       def callback(object, payload)
         method = method_for(payload)
